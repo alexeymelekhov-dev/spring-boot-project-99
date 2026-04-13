@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/hexlet_spring_blog}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/spring-boot-project-99}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
