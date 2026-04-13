@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: app
+  datasource:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+      properties:
+      format_sql: true
+output:
+  ansi:
+  enabled: always    # цветной вывод логотипа
+logging:
+  pattern:
+    dateformat: "yyyy-MM-dd HH:mm:ss"  # кастомный формат даты в логах
+app:
+  welcome-message: "Welcome to Spring blog!"  # наше кастомное сообщение
+rsa:
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
