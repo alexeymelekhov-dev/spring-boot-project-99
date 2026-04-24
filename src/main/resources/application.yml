@@ -29,7 +29,8 @@ springdoc:
   api-docs:
     path: /api-docs
 sentry:
-  dsn: ${SENTRY_DSN}
+  dsn: ${SENTRY_DSN:}
+  enabled: ${SENTRY_ENABLED:true}
   traces-sample-rate: 1.0
   send-default-pii: true
   exception-resolver-order: -2147483647
