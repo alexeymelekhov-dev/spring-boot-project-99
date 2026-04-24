@@ -94,13 +94,13 @@ public class TaskService {
 
             task.setAssignee(user);
         }
-        if (dto.getLabelIds() != null) {
-            var ids = dto.getLabelIds().stream()
+        if (dto.getLabelIds() != null && !dto.getLabelIds().isEmpty()) {
+            var validIds = dto.getLabelIds().stream()
                     .filter(Objects::nonNull)
                     .toList();
 
-            if (!ids.isEmpty()) {
-                Set<Label> labels = new HashSet<>(labelRepository.findAllById(ids));
+            if (!validIds.isEmpty()) {
+                Set<Label> labels = new HashSet<>(labelRepository.findAllById(validIds));
                 task.setLabels(labels);
             }
         }
