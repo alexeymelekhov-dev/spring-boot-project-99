@@ -52,9 +52,6 @@ public class TaskStatusService {
 
         taskStatusMapper.updateTaskStatusFromDTO(dto, taskStatus);
 
-        if (dto.getName() != null) taskStatus.setName(dto.getName());
-        if (dto.getSlug() != null) taskStatus.setSlug(dto.getSlug());
-
         var updatedTaskStatus = taskStatusRepository.save(taskStatus);
 
         return taskStatusMapper.toDTO(updatedTaskStatus);

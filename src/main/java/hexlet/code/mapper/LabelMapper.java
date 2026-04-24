@@ -17,10 +17,10 @@ public interface LabelMapper {
     @Mapping(target = "tasks", ignore = true)
     Label toEntity(LabelCreateDTO dto);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "tasks", ignore = true)
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateLabelFromDTO(LabelUpdateDTO dto, @MappingTarget Label label);
 }

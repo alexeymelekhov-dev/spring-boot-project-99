@@ -23,22 +23,22 @@ public interface TaskMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "name", source = "title")
-    @Mapping(target = "description", source = "content")
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "assignee", ignore = true)
     @Mapping(target = "labels", ignore = true)
+    @Mapping(target = "name", source = "title")
+    @Mapping(target = "description", source = "content")
     Task toEntity(TaskCreateDTO dto);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "assignee", ignore = true)
+    @Mapping(target = "labels", ignore = true)
     @Mapping(target = "name", source = "title")
     @Mapping(target = "description", source = "content")
-    @Mapping(target = "labels", ignore = true)
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateTaskFromDTO(TaskUpdateDTO dto, @MappingTarget Task task);
 
     default Set<String> map(Set<Label> labels) {

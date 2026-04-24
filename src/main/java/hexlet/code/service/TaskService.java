@@ -79,9 +79,6 @@ public class TaskService {
 
         taskMapper.updateTaskFromDTO(dto, task);
 
-        if (dto.getTitle() != null) task.setName(dto.getTitle());
-        if (dto.getContent() != null) task.setDescription(dto.getContent());
-        if (dto.getIndex() != null) task.setIndex(dto.getIndex());
         if (dto.getStatus() != null) {
             TaskStatus status = taskStatusRepository.findBySlug(dto.getStatus())
                     .orElseThrow(() -> new ResourceNotFoundException(

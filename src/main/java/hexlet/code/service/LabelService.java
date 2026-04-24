@@ -50,8 +50,6 @@ public class LabelService {
 
         labelMapper.updateLabelFromDTO(dto, label);
 
-        if (dto.getName() != null) label.setName(dto.getName());
-
         var updatedLabel = labelRepository.save(label);
 
         return labelMapper.toDTO(updatedLabel);
