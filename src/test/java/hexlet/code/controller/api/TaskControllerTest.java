@@ -205,6 +205,28 @@ public class TaskControllerTest {
 
     @Test
     @WithMockUser(username = USER_EMAIL)
+    void shouldCreateTaskWithoutLabels() throws Exception {
+        var user = createAndSaveUser("email@example.com");
+        var status = createAndSaveTaskStatus("New", "new");
+
+        var taskCreateDTO = new TaskCreateDTO();
+        taskCreateDTO.setAssigneeId(user.getId());
+        taskCreateDTO.setStatus(status.getSlug());
+        taskCreateDTO.setTitle("Test title");
+        taskCreateDTO.setContent("Test content");
+        taskCreateDTO.setLabelIds(null);
+
+        var body = objectMapper.writeValueAsString(taskCreateDTO);
+
+        mockMvc.perform(post("/api/tasks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.labels").isEmpty());
+    }
+
+    @Test
+    @WithMockUser(username = USER_EMAIL)
     void shouldReturnBadRequestWhenInvalidJson_onCreate() throws Exception {
         mockMvc.perform(post("/api/tasks")
                         .contentType(MediaType.APPLICATION_JSON)

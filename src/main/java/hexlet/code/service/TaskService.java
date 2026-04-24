@@ -19,10 +19,7 @@ import hexlet.code.specification.TaskSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -52,8 +49,12 @@ public class TaskService {
                         ErrorMessage.TASK_STATUS_NOT_FOUND.format(dto.getStatus())));
         task.setStatus(status);
 
-        Set<Label> labels = new HashSet<>(labelRepository.findAllById(dto.getLabelIds()));
-        task.setLabels(labels);
+        var labelIds = dto.getLabelIds();
+
+        if (labelIds != null && !labelIds.isEmpty()) {
+            Set<Label> labels = resolveLabels(labelIds);
+            task.setLabels(labels);
+        }
 
         if (dto.getAssigneeId() != null) {
             User user = userRepository.findById(dto.getAssigneeId())
@@ -87,6 +88,7 @@ public class TaskService {
                     );
             task.setStatus(status);
         }
+
         if (dto.getAssigneeId() != null) {
             User user = userRepository.findById(dto.getAssigneeId())
                     .orElseThrow(() -> new ResourceNotFoundException(
@@ -94,15 +96,12 @@ public class TaskService {
 
             task.setAssignee(user);
         }
-        if (dto.getLabelIds() != null && !dto.getLabelIds().isEmpty()) {
-            var validIds = dto.getLabelIds().stream()
-                    .filter(Objects::nonNull)
-                    .toList();
 
-            if (!validIds.isEmpty()) {
-                Set<Label> labels = new HashSet<>(labelRepository.findAllById(validIds));
-                task.setLabels(labels);
-            }
+        var labelIds = dto.getLabelIds();
+
+        if (labelIds != null && !labelIds.isEmpty()) {
+            Set<Label> labels = resolveLabels(labelIds);
+            task.setLabels(labels);
         }
 
         Task updatedTask = taskRepository.save(task);
@@ -115,6 +114,26 @@ public class TaskService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.TASK_NOT_FOUND.format(id)));
 
         taskRepository.deleteById(task.getId());
+    }
+
+    private Set<Label> resolveLabels(Set<Long> labelIds) {
+        if (labelIds == null || labelIds.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        Set<Label> labels = new HashSet<>();
+
+        for (Long id : labelIds) {
+            Label label = labelRepository.findById(id)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException(
+                                    ErrorMessage.LABEL_NOT_FOUND.format(id)
+                            )
+                    );
+            labels.add(label);
+        }
+
+        return labels;
     }
 
 }
