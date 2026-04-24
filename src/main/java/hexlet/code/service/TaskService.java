@@ -53,7 +53,8 @@ public class TaskService {
 
         if (labelIds != null && !labelIds.isEmpty()) {
             Set<Label> labels = resolveLabels(labelIds);
-            task.setLabels(labels);
+            task.getLabels().clear();
+            task.getLabels().addAll(labels);
         }
 
         if (dto.getAssigneeId() != null) {
@@ -101,7 +102,8 @@ public class TaskService {
 
         if (labelIds != null && !labelIds.isEmpty()) {
             Set<Label> labels = resolveLabels(labelIds);
-            task.setLabels(labels);
+            task.getLabels().clear();
+            task.getLabels().addAll(labels);
         }
 
         Task updatedTask = taskRepository.save(task);
