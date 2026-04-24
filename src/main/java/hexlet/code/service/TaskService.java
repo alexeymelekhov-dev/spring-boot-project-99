@@ -70,7 +70,7 @@ public class TaskService {
     }
 
     public TaskDTO getTaskById(Long id) {
-        return taskRepository.findById(id)
+        return taskRepository.findByIdWithLabels(id)
                 .map(taskMapper::toDTO)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.TASK_NOT_FOUND.format(id)));
     }
