@@ -78,12 +78,7 @@ public class UserControllerTest {
                         () -> assertEquals(user.getFirstName(), usersJson.get("firstName").asText()),
                         () -> assertEquals(user.getLastName(), usersJson.get("lastName").asText()),
                         () -> assertEquals(user.getEmail(), usersJson.get("email").asText()),
-
-                        () -> assertThat(usersJson.get("createdAt").asText())
-                                .startsWith(user.getCreatedAt().toString().substring(0, 19)),
-
-                        () -> assertThat(usersJson.get("updatedAt").asText())
-                                .startsWith(user.getUpdatedAt().toString().substring(0, 19))
+                        () -> assertEquals(user.getCreatedAt().toString(), usersJson.get("createdAt").asText())
                     );
                 });
     }
@@ -107,8 +102,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email").value(userCreateDTO.getEmail()))
                 .andExpect(jsonPath("$.firstName").value(userCreateDTO.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(userCreateDTO.getLastName()))
-                .andExpect(jsonPath("$.createdAt").isNotEmpty())
-                .andExpect(jsonPath("$.updatedAt").isNotEmpty());
+                .andExpect(jsonPath("$.createdAt").isNotEmpty());
     }
 
     @Test
@@ -145,14 +139,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
                 .andExpect(jsonPath("$.firstName").value(user.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(user.getLastName()))
-                .andExpect(
-                        jsonPath("$.createdAt")
-                                .value(startsWith(user.getCreatedAt().toString().substring(0, 19)))
-                )
-                .andExpect(
-                        jsonPath("$.updatedAt")
-                                .value(startsWith(user.getUpdatedAt().toString().substring(0, 19)))
-                );
+                .andExpect(jsonPath("$.createdAt").value(user.getCreatedAt().toString()));
     }
 
     @Test
@@ -171,8 +158,6 @@ public class UserControllerTest {
     void shouldUpdateUserWhenUserIsOwner_withAllFieldsProvided() throws Exception {
         var user = createAndSaveUser(USER_EMAIL);
 
-        var beforeUpdatedAt = user.getUpdatedAt();
-
         var userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setFirstName(faker.name().firstName());
         userUpdateDTO.setLastName(faker.name().lastName());
@@ -189,14 +174,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.firstName").value(userUpdateDTO.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(userUpdateDTO.getLastName()))
                 .andExpect(jsonPath("$.email").value(userUpdateDTO.getEmail()))
-                .andExpect(jsonPath("$.createdAt").isNotEmpty())
-                .andExpect(jsonPath("$.updatedAt").isNotEmpty());
-
-        var afterUpdatedAt = userRepository.findById(user.getId())
-                .orElseThrow()
-                .getUpdatedAt();
-
-        assertTrue(afterUpdatedAt.isAfter(beforeUpdatedAt));
+                .andExpect(jsonPath("$.createdAt").isNotEmpty());
     }
 
     @Test

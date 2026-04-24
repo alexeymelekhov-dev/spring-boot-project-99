@@ -1,10 +1,9 @@
 package hexlet.code.dto.task;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -18,11 +17,6 @@ public class TaskDTO {
     private String status;
     private Long assignee_id;
     private Set<String> labels;
-
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime createdAt;
-
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime updatedAt;
+    private LocalDate createdAt;
 
 }

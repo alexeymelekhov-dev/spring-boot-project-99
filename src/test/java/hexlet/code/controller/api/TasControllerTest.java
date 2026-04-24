@@ -30,6 +30,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -94,11 +95,7 @@ public class TasControllerTest {
                                     task.getLabels().stream().findFirst().orElseThrow().getName(),
                                     taskJson.get("labels").get(0).asText()
                             ),
-                            () -> assertThat(taskJson.get("createdAt").asText())
-                                    .startsWith(task.getCreatedAt().toString().substring(0, 19)),
-
-                            () -> assertThat(taskJson.get("updatedAt").asText())
-                                    .startsWith(task.getUpdatedAt().toString().substring(0, 19))
+                            () -> assertEquals(task.getCreatedAt().toString(), taskJson.get("createdAt").asText())
                     );
                 });
     }
@@ -203,8 +200,7 @@ public class TasControllerTest {
                         firstLabel.getName(),
                         secondLabel.getName()
                 )))
-                .andExpect(jsonPath("$.createdAt").isNotEmpty())
-                .andExpect(jsonPath("$.updatedAt").isNotEmpty());
+                .andExpect(jsonPath("$.createdAt").isNotEmpty());
     }
 
     @Test
@@ -235,8 +231,7 @@ public class TasControllerTest {
                                 .map(Label::getName)
                                 .toArray()
                 )))
-                .andExpect(jsonPath("$.createdAt").isNotEmpty())
-                .andExpect(jsonPath("$.updatedAt").isNotEmpty());
+                .andExpect(jsonPath("$.createdAt").value(task.getCreatedAt().toString()));
     }
 
     @Test
@@ -253,8 +248,6 @@ public class TasControllerTest {
     @WithMockUser(username = USER_EMAIL)
     void shouldUpdateTaskPartially_whenOnlyTitleAndContentProvided() throws Exception {
         var task = createAndSaveTask(null, null, null, null);
-
-        var beforeUpdatedAt = task.getUpdatedAt();
 
         var taskUpdateDTO = new TaskUpdateDTO();
         taskUpdateDTO.setTitle("New title");
@@ -279,23 +272,13 @@ public class TasControllerTest {
                                 .map(Label::getName)
                                 .toArray()
                 )))
-                .andExpect(jsonPath("$.createdAt").isNotEmpty())
-                .andExpect(jsonPath("$.updatedAt").isNotEmpty())
-                .andReturn();
-
-        var afterUpdatedAt = taskRepository.findById(task.getId())
-                .orElseThrow()
-                .getUpdatedAt();
-
-        assertTrue(afterUpdatedAt.isAfter(beforeUpdatedAt));
+                .andExpect(jsonPath("$.createdAt").value(task.getCreatedAt().toString()));
     }
 
     @Test
     @WithMockUser(username = USER_EMAIL)
     void shouldUpdateTask_whenAllFieldsProvided() throws Exception {
         var task = createAndSaveTask(null, null, null, null);
-
-        var beforeUpdatedAt = task.getUpdatedAt();
 
         var newStatus = createAndSaveTaskStatus("Done", "done");
         var newAssignee = createAndSaveUser("new-assignee@example.com");
@@ -330,15 +313,7 @@ public class TasControllerTest {
                         firstLabel.getName(),
                         secondLabel.getName()
                 )))
-                .andExpect(jsonPath("$.createdAt").isNotEmpty())
-                .andExpect(jsonPath("$.updatedAt").isNotEmpty())
-                .andReturn();
-
-        var afterUpdatedAt = taskRepository.findById(task.getId())
-                .orElseThrow()
-                .getUpdatedAt();
-
-        assertTrue(afterUpdatedAt.isAfter(beforeUpdatedAt));
+                .andExpect(jsonPath("$.createdAt").value(task.getCreatedAt().toString()));
     }
 
     @Test

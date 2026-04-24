@@ -73,12 +73,7 @@ public class LabelControllerTest {
                     assertAll(
                             () -> assertEquals(label.getId(), labelJson.get("id").asLong()),
                             () -> assertEquals(label.getName(), labelJson.get("name").asText()),
-
-                            () -> assertThat(labelJson.get("createdAt").asText())
-                                    .startsWith(label.getCreatedAt().toString().substring(0, 19)),
-
-                            () -> assertThat(labelJson.get("updatedAt").asText())
-                                    .startsWith(label.getUpdatedAt().toString().substring(0, 19))
+                            () -> assertEquals(label.getCreatedAt().toString(), labelJson.get("createdAt").asText())
                     );
                 });
     }
@@ -98,8 +93,7 @@ public class LabelControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").isNotEmpty())
                 .andExpect(jsonPath("$.name").value(labelCreateDTO.getName()))
-                .andExpect(jsonPath("$.createdAt").isNotEmpty())
-                .andExpect(jsonPath("$.updatedAt").isNotEmpty());
+                .andExpect(jsonPath("$.createdAt").isNotEmpty());
     }
 
     @Test
@@ -121,8 +115,7 @@ public class LabelControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(label.getId()))
                 .andExpect(jsonPath("$.name").value(label.getName()))
-                .andExpect(jsonPath("$.createdAt").isNotEmpty())
-                .andExpect(jsonPath("$.updatedAt").isNotEmpty());
+                .andExpect(jsonPath("$.createdAt").value(label.getCreatedAt().toString()));
     }
 
     @Test
@@ -141,10 +134,6 @@ public class LabelControllerTest {
     void shouldUpdateSuccessfulLabelWithValidJson() throws Exception {
         var label = createAndSaveLabel("question");
 
-        System.out.println(label.getId());
-
-        var beforeUpdatedAt = label.getUpdatedAt();
-
         var labelUpdateDTO = new LabelUpdateDTO();
         labelUpdateDTO.setName("new-label-name");
 
@@ -157,14 +146,7 @@ public class LabelControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(label.getId()))
                 .andExpect(jsonPath("$.name").value(labelUpdateDTO.getName()))
-                .andExpect(jsonPath("$.createdAt").isNotEmpty())
-                .andExpect(jsonPath("$.updatedAt").isNotEmpty());
-
-        var afterUpdatedAt = labelRepository.findById(label.getId())
-                .orElseThrow()
-                .getUpdatedAt();
-
-        assertTrue(afterUpdatedAt.isAfter(beforeUpdatedAt));
+                .andExpect(jsonPath("$.createdAt").value(label.getUpdatedAt().toString()));
     }
 
     @Test

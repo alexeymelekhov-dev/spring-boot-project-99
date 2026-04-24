@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,10 +39,6 @@ public class ModelGenerator {
         user.setLastName("Ivanov");
         user.setEmail("hexlet@example.com");
         user.setPassword(passwordEncoder.encode("qwerty"));
-
-        LocalDateTime now = LocalDateTime.now();
-        user.setCreatedAt(now);
-        user.setUpdatedAt(now);
 
         userRepository.save(user);
     }

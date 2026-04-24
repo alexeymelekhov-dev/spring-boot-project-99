@@ -73,12 +73,7 @@ public class TaskStatusControllerTest {
                             () -> assertEquals(taskStatus.getId(), taskStatusJson.get("id").asLong()),
                             () -> assertEquals(taskStatus.getName(), taskStatusJson.get("name").asText()),
                             () -> assertEquals(taskStatus.getSlug(), taskStatusJson.get("slug").asText()),
-
-                            () -> assertThat(taskStatusJson.get("createdAt").asText())
-                                    .startsWith(taskStatus.getCreatedAt().toString().substring(0, 19)),
-
-                            () -> assertThat(taskStatusJson.get("updatedAt").asText())
-                                    .startsWith(taskStatus.getUpdatedAt().toString().substring(0, 19))
+                            () -> assertEquals(taskStatus.getCreatedAt().toString(), taskStatusJson.get("createdAt").asText())
                     );
                 });
     }
@@ -100,8 +95,7 @@ public class TaskStatusControllerTest {
                 .andExpect(jsonPath("$.id").isNotEmpty())
                 .andExpect(jsonPath("$.name").value(taskStatus.getName()))
                 .andExpect(jsonPath("$.slug").value(taskStatus.getSlug()))
-                .andExpect(jsonPath("$.createdAt").isNotEmpty())
-                .andExpect(jsonPath("$.updatedAt").isNotEmpty());
+                .andExpect(jsonPath("$.createdAt").isNotEmpty());
     }
 
     @Test
@@ -187,11 +181,7 @@ public class TaskStatusControllerTest {
                             () -> assertEquals(taskStatus.getId(), taskStatusJson.get("id").asLong()),
                             () -> assertEquals(taskStatus.getName(), taskStatusJson.get("name").asText()),
                             () -> assertEquals(taskStatus.getSlug(), taskStatusJson.get("slug").asText()),
-                            () -> assertThat(taskStatusJson.get("createdAt").asText())
-                                    .startsWith(taskStatus.getCreatedAt().toString().substring(0, 19)),
-
-                            () -> assertThat(taskStatusJson.get("updatedAt").asText())
-                                    .startsWith(taskStatus.getUpdatedAt().toString().substring(0, 19))
+                            () -> assertEquals(taskStatus.getCreatedAt().toString(), taskStatusJson.get("createdAt").asText())
                     );
                 });
     }
@@ -217,8 +207,6 @@ public class TaskStatusControllerTest {
 
         taskStatusRepository.save(taskStatus);
 
-        var beforeUpdatedAt = taskStatus.getUpdatedAt();
-
         var newName = "Done";
         var newSlug = "done";
         var taskStatusRequestBody = """
@@ -236,14 +224,7 @@ public class TaskStatusControllerTest {
                 .andExpect(jsonPath("$.id").value(taskStatus.getId()))
                 .andExpect(jsonPath("$.name").value(newName))
                 .andExpect(jsonPath("$.slug").value(newSlug))
-                .andExpect(jsonPath("$.createdAt").exists())
-                .andExpect(jsonPath("$.updatedAt").exists());
-
-        var afterUpdatedAt = taskStatusRepository.findById(taskStatus.getId())
-                .orElseThrow()
-                .getUpdatedAt();
-
-        assertTrue(afterUpdatedAt.isAfter(beforeUpdatedAt));
+                .andExpect(jsonPath("$.createdAt").value(taskStatus.getCreatedAt().toString()));
     }
 
     @Test
@@ -272,8 +253,7 @@ public class TaskStatusControllerTest {
                 .andExpect(jsonPath("$.id").value(taskStatus.getId()))
                 .andExpect(jsonPath("$.name").value(newValue))
                 .andExpect(jsonPath("$.slug").value(taskStatus.getSlug()))
-                .andExpect(jsonPath("$.createdAt").exists())
-                .andExpect(jsonPath("$.updatedAt").exists());
+                .andExpect(jsonPath("$.createdAt").value(taskStatus.getCreatedAt().toString()));
     }
 
     @Test
