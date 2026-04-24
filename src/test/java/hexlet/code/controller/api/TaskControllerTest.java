@@ -92,8 +92,8 @@ public class TaskControllerTest {
                             () -> assertEquals(task.getStatus().getSlug(), taskJson.get("status").asText()),
                             () -> assertEquals(task.getAssignee().getId(), taskJson.get("assignee_id").asLong()),
                             () -> assertEquals(
-                                    task.getLabels().stream().findFirst().orElseThrow().getName(),
-                                    taskJson.get("labels").get(0).asText()
+                                    task.getLabels().stream().findFirst().orElseThrow().getId(),
+                                    taskJson.get("taskLabelIds").get(0).asLong()
                             ),
                             () -> assertEquals(task.getCreatedAt().toString(), taskJson.get("createdAt").asText())
                     );
@@ -196,9 +196,9 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.index").value(taskCreateDTO.getIndex()))
                 .andExpect(jsonPath("$.status").value(status.getSlug()))
                 .andExpect(jsonPath("$.assignee_id").value(user.getId()))
-                .andExpect(jsonPath("$.labels", containsInAnyOrder(
-                        firstLabel.getName(),
-                        secondLabel.getName()
+                .andExpect(jsonPath("$.taskLabelIds", containsInAnyOrder(
+                        firstLabel.getId().intValue(),
+                        secondLabel.getId().intValue()
                 )))
                 .andExpect(jsonPath("$.createdAt").isNotEmpty());
     }
@@ -222,7 +222,7 @@ public class TaskControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.labels").isEmpty());
+                .andExpect(jsonPath("$.taskLabelIds").isEmpty());
     }
 
     @Test
@@ -248,9 +248,10 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.index").value(task.getIndex()))
                 .andExpect(jsonPath("$.status").value(task.getStatus().getSlug()))
                 .andExpect(jsonPath("$.assignee_id").value(task.getAssignee().getId()))
-                .andExpect(jsonPath("$.labels", containsInAnyOrder(
+                .andExpect(jsonPath("$.taskLabelIds", containsInAnyOrder(
                         task.getLabels().stream()
-                                .map(Label::getName)
+                                .map(Label::getId)
+                                .map(Long::intValue)
                                 .toArray()
                 )))
                 .andExpect(jsonPath("$.createdAt").value(task.getCreatedAt().toString()));
@@ -289,9 +290,10 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.index").value(task.getIndex()))
                 .andExpect(jsonPath("$.status").value(task.getStatus().getSlug()))
                 .andExpect(jsonPath("$.assignee_id").value(task.getAssignee().getId()))
-                .andExpect(jsonPath("$.labels", containsInAnyOrder(
+                .andExpect(jsonPath("$.taskLabelIds", containsInAnyOrder(
                         task.getLabels().stream()
-                                .map(Label::getName)
+                                .map(Label::getId)
+                                .map(Long::intValue)
                                 .toArray()
                 )))
                 .andExpect(jsonPath("$.createdAt").value(task.getCreatedAt().toString()));
@@ -331,9 +333,9 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.index").value(taskUpdateDTO.getIndex()))
                 .andExpect(jsonPath("$.status").value(taskUpdateDTO.getStatus()))
                 .andExpect(jsonPath("$.assignee_id").value(taskUpdateDTO.getAssigneeId()))
-                .andExpect(jsonPath("$.labels", containsInAnyOrder(
-                        firstLabel.getName(),
-                        secondLabel.getName()
+                .andExpect(jsonPath("$.taskLabelIds", containsInAnyOrder(
+                        firstLabel.getId().intValue(),
+                        secondLabel.getId().intValue()
                 )))
                 .andExpect(jsonPath("$.createdAt").value(task.getCreatedAt().toString()));
     }

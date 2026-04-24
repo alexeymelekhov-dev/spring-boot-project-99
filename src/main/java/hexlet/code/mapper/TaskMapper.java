@@ -18,6 +18,7 @@ public interface TaskMapper {
     @Mapping(target = "content", source = "description")
     @Mapping(target = "status", source = "status.slug")
     @Mapping(target = "assignee_id", source = "assignee.id")
+    @Mapping(target = "taskLabelIds", source = "labels")
     TaskDTO toDTO(Task task);
 
     @Mapping(target = "id", ignore = true)
@@ -41,11 +42,11 @@ public interface TaskMapper {
     @Mapping(target = "description", source = "content")
     void updateTaskFromDTO(TaskUpdateDTO dto, @MappingTarget Task task);
 
-    default Set<String> map(Set<Label> labels) {
+    default Set<Long> map(Set<Label> labels) {
         if (labels == null) return Collections.emptySet();
 
         return labels.stream()
-                .map(Label::getName)
+                .map(Label::getId)
                 .collect(Collectors.toSet());
     }
 }
