@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -94,8 +95,14 @@ public class TaskService {
             task.setAssignee(user);
         }
         if (dto.getLabelIds() != null) {
-            Set<Label> labels = new HashSet<>(labelRepository.findAllById(dto.getLabelIds()));
-            task.setLabels(labels);
+            var ids = dto.getLabelIds().stream()
+                    .filter(Objects::nonNull)
+                    .toList();
+
+            if (!ids.isEmpty()) {
+                Set<Label> labels = new HashSet<>(labelRepository.findAllById(ids));
+                task.setLabels(labels);
+            }
         }
 
         Task updatedTask = taskRepository.save(task);

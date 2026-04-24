@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class TasControllerTest {
+public class TaskControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
