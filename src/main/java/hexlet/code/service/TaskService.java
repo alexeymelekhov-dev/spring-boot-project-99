@@ -53,8 +53,7 @@ public class TaskService {
 
         if (labelIds != null && !labelIds.isEmpty()) {
             Set<Label> labels = resolveLabels(labelIds);
-            task.getLabels().clear();
-            task.getLabels().addAll(labels);
+            task.setLabels(new HashSet<>(labels));
         }
 
         if (dto.getAssigneeId() != null) {
@@ -66,6 +65,8 @@ public class TaskService {
         }
 
         Task saved = taskRepository.save(task);
+
+        System.out.println("labels in entity = " + saved.getLabels().size());
 
         return taskMapper.toDTO(saved);
     }
