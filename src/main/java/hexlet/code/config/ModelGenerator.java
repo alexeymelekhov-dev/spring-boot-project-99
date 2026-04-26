@@ -8,6 +8,7 @@ import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,9 @@ public class ModelGenerator {
     private final LabelRepository labelRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${app.default-user-password}")
+    private String defaultPassword;
+
     @PostConstruct
     public void generateData() {
         createDefaultUser();
@@ -38,7 +42,7 @@ public class ModelGenerator {
         user.setFirstName("Ivan");
         user.setLastName("Ivanov");
         user.setEmail("hexlet@example.com");
-        user.setPassword(passwordEncoder.encode("qwerty"));
+        user.setPassword(passwordEncoder.encode(defaultPassword));
 
         userRepository.save(user);
     }

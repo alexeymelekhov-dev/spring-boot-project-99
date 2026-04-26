@@ -20,6 +20,7 @@ logging:
     dateformat: "yyyy-MM-dd HH:mm:ss"  # кастомный формат даты в логах
 app:
   welcome-message: "Welcome to Spring blog!"  # наше кастомное сообщение
+  default-user-password: "qwerty"
 rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
