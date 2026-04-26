@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -24,25 +24,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build & Test
-        run: ./gradlew clean build test
-
-      - name: Run JaCoCo report
-        run: ./gradlew jacocoTestReport
-
-      - name: Upload JaCoCo report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-report
-          path: build/reports/jacoco/
-
-      - name: SonarCloud Scan
+      - name: Build + Test + Coverage + Sonar
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./gradlew sonar \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+          ./gradlew clean test jacocoTestReport sonar \
             -Dsonar.projectKey=alexeymelekhov-dev_spring-boot-project-99 \
             -Dsonar.organization=alexeymelekhov-dev \
             -Dsonar.host.url=https://sonarcloud.io
