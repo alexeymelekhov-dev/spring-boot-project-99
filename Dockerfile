@@ -1,9 +1,13 @@
-FROM gradle:8.9-jdk21
-
+# ---------- Stage 1: build jar ----------
+FROM gradle:8.7-jdk21 AS build
 WORKDIR /app
+COPY . .
+RUN gradle bootJar --no-daemon
 
-COPY /app .
+# ---------- Stage 2: run app ----------
+FROM eclipse-temurin:21-jdk
+WORKDIR /app
+COPY --from=build /app/build/libs/*.jar app.jar
 
-RUN gradle installDist
-
-CMD ["./build/install/app/bin/app"]
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
