@@ -38,6 +38,12 @@ public class ModelGenerator {
     }
 
     private void createDefaultUser() {
+        String email = "hexlet@example.com";
+
+        if (userRepository.findByEmail(email).isPresent()) {
+            return;
+        }
+
         var user = new User();
         user.setFirstName("Ivan");
         user.setLastName("Ivanov");
@@ -51,6 +57,10 @@ public class ModelGenerator {
         List<String> slugNames = List.of("draft", "to_review", "to_be_fixed", "to_publish", "published");
 
         slugNames.forEach(slug -> {
+            if (taskStatusRepository.findBySlug(slug).isPresent()) {
+                return;
+            }
+
             var taskStatus = new TaskStatus();
             var name = slugToName(slug);
             taskStatus.setName(name);
@@ -63,6 +73,10 @@ public class ModelGenerator {
         List<String> labelNames = List.of("feature", "bub");
 
         labelNames.forEach(labelName -> {
+            if (labelRepository.existsByName(labelName)) {
+                return;
+            }
+
             var label = new Label();
             label.setName(labelName);
             labelRepository.save(label);
