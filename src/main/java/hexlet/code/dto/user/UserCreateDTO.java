@@ -1,25 +1,19 @@
 package hexlet.code.dto.user;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-public class UserCreateDTO {
+public record UserCreateDTO(
+        String firstName,
+        String lastName,
 
-    private String firstName;
+        @Email
+        @NotBlank
+        String email,
 
-    private String lastName;
-
-    @Email
-    @NotBlank
-    private String email;
-
-    @NotBlank
-    @Size(min = 2, max = 50)
-    private String password;
+        @NotBlank
+        @Size(min = 2, max = 50)
+        String password
+) {
 }

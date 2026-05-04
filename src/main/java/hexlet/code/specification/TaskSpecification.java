@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 public class TaskSpecification {
 
     public Specification<Task> build(TaskFilterDTO dto) {
-        return withTitleCount(dto.getTitleCont())
-                .and(withAssigneeId(dto.getAssigneeId()))
-                .and(withStatus(dto.getStatus()))
-                .and(withLabelId(dto.getLabelId()));
+        return withTitleCount(dto.titleCont())
+                .and(withAssigneeId(dto.assigneeId()))
+                .and(withStatus(dto.status()))
+                .and(withLabelId(dto.labelId()));
     }
 
     public Specification<Task> withTitleCount(String titleCount) {

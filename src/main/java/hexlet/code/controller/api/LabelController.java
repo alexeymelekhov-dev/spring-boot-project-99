@@ -31,7 +31,7 @@ public class LabelController {
     public ResponseEntity<LabelDTO> createLabel(@Valid @RequestBody LabelCreateDTO dto) {
         var label = labelService.createLabel(dto);
         return ResponseEntity
-                .created(URI.create("/api/labels/" + label.getId()))
+                .created(URI.create("/api/labels/" + label.id()))
                 .body(label);
     }
 

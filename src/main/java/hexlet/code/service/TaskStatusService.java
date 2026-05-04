@@ -30,7 +30,7 @@ public class TaskStatusService {
     }
 
     public TaskStatusDTO createTaskStatus(TaskStatusCreateDTO dto) {
-        validateUniqueNameAndSlug(dto.getName(), dto.getSlug());
+        validateUniqueNameAndSlug(dto.name(), dto.slug());
 
         var taskStatus = taskStatusMapper.toEntity(dto);
         var savedTaskStatus = taskStatusRepository.save(taskStatus);
@@ -48,7 +48,7 @@ public class TaskStatusService {
         var taskStatus = taskStatusRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.TASK_STATUS_NOT_FOUND.format(id)));
 
-        validateUniqueNameAndSlug(dto.getName(), dto.getSlug());
+        validateUniqueNameAndSlug(dto.name(), dto.slug());
 
         taskStatusMapper.updateTaskStatusFromDTO(dto, taskStatus);
 

@@ -86,11 +86,12 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = USER_EMAIL)
     void shouldCreateUser() throws Exception {
-        var userCreateDTO = new UserCreateDTO();
-        userCreateDTO.setEmail(faker.internet().emailAddress());
-        userCreateDTO.setFirstName(faker.name().firstName());
-        userCreateDTO.setLastName(faker.name().lastName());
-        userCreateDTO.setPassword(faker.credentials().password(8, 16, true, true));
+        var userCreateDTO = new UserCreateDTO(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                faker.internet().emailAddress(),
+                faker.credentials().password(8, 16, true, true)
+        );
 
         var requestBody = objectMapper.writeValueAsString(userCreateDTO);
 
@@ -99,9 +100,9 @@ public class UserControllerTest {
                         .content(requestBody))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isNotEmpty())
-                .andExpect(jsonPath("$.email").value(userCreateDTO.getEmail()))
-                .andExpect(jsonPath("$.firstName").value(userCreateDTO.getFirstName()))
-                .andExpect(jsonPath("$.lastName").value(userCreateDTO.getLastName()))
+                .andExpect(jsonPath("$.email").value(userCreateDTO.email()))
+                .andExpect(jsonPath("$.firstName").value(userCreateDTO.firstName()))
+                .andExpect(jsonPath("$.lastName").value(userCreateDTO.lastName()))
                 .andExpect(jsonPath("$.createdAt").isNotEmpty());
     }
 
@@ -158,11 +159,12 @@ public class UserControllerTest {
     void shouldUpdateUserWhenUserIsOwner_withAllFieldsProvided() throws Exception {
         var user = createAndSaveUser(USER_EMAIL);
 
-        var userUpdateDTO = new UserUpdateDTO();
-        userUpdateDTO.setFirstName(faker.name().firstName());
-        userUpdateDTO.setLastName(faker.name().lastName());
-        userUpdateDTO.setEmail(faker.internet().emailAddress());
-        userUpdateDTO.setPassword(faker.credentials().password(8, 16));
+        var userUpdateDTO = new UserUpdateDTO(
+                faker.internet().emailAddress(),
+                faker.name().firstName(),
+                faker.name().lastName(),
+                faker.credentials().password(8, 16)
+        );
 
         var requestBody = objectMapper.writeValueAsString(userUpdateDTO);
 
@@ -171,9 +173,9 @@ public class UserControllerTest {
                         .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.firstName").value(userUpdateDTO.getFirstName()))
-                .andExpect(jsonPath("$.lastName").value(userUpdateDTO.getLastName()))
-                .andExpect(jsonPath("$.email").value(userUpdateDTO.getEmail()))
+                .andExpect(jsonPath("$.firstName").value(userUpdateDTO.firstName()))
+                .andExpect(jsonPath("$.lastName").value(userUpdateDTO.lastName()))
+                .andExpect(jsonPath("$.email").value(userUpdateDTO.email()))
                 .andExpect(jsonPath("$.createdAt").isNotEmpty());
     }
 

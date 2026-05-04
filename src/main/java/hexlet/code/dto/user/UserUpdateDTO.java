@@ -2,20 +2,14 @@ package hexlet.code.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-public class UserUpdateDTO {
+public record UserUpdateDTO(
+        @Email
+        String email,
 
-    @Email
-    private String email;
+        String firstName,
+        String lastName,
 
-    private String firstName;
-    private String lastName;
-
-    @Size(min = 2, max = 50)
-    private String password;
-
-}
+        @Size(min = 2, max = 50)
+        String password
+) {}

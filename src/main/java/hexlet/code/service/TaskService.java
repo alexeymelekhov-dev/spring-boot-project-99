@@ -44,22 +44,22 @@ public class TaskService {
 
         Task task = taskMapper.toEntity(dto);
 
-        TaskStatus status = taskStatusRepository.findBySlug(dto.getStatus())
+        TaskStatus status = taskStatusRepository.findBySlug(dto.status())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        ErrorMessage.TASK_STATUS_NOT_FOUND.format(dto.getStatus())));
+                        ErrorMessage.TASK_STATUS_NOT_FOUND.format(dto.status())));
         task.setStatus(status);
 
-        var labelIds = dto.getLabelIds();
+        var labelIds = dto.labelIds();
 
         if (labelIds != null && !labelIds.isEmpty()) {
             Set<Label> labels = resolveLabels(labelIds);
             task.setLabels(new HashSet<>(labels));
         }
 
-        if (dto.getAssigneeId() != null) {
-            User user = userRepository.findById(dto.getAssigneeId())
+        if (dto.assigneeId() != null) {
+            User user = userRepository.findById(dto.assigneeId())
                     .orElseThrow(() -> new ResourceNotFoundException(
-                            ErrorMessage.USER_NOT_FOUND.format(dto.getAssigneeId())));
+                            ErrorMessage.USER_NOT_FOUND.format(dto.assigneeId())));
 
             task.setAssignee(user);
         }
@@ -83,23 +83,23 @@ public class TaskService {
 
         taskMapper.updateTaskFromDTO(dto, task);
 
-        if (dto.getStatus() != null) {
-            TaskStatus status = taskStatusRepository.findBySlug(dto.getStatus())
+        if (dto.status() != null) {
+            TaskStatus status = taskStatusRepository.findBySlug(dto.status())
                     .orElseThrow(() -> new ResourceNotFoundException(
-                            ErrorMessage.TASK_STATUS_NOT_FOUND.format(dto.getStatus()))
+                            ErrorMessage.TASK_STATUS_NOT_FOUND.format(dto.status()))
                     );
             task.setStatus(status);
         }
 
-        if (dto.getAssigneeId() != null) {
-            User user = userRepository.findById(dto.getAssigneeId())
+        if (dto.assigneeId() != null) {
+            User user = userRepository.findById(dto.assigneeId())
                     .orElseThrow(() -> new ResourceNotFoundException(
-                            ErrorMessage.USER_NOT_FOUND.format(dto.getAssigneeId())));
+                            ErrorMessage.USER_NOT_FOUND.format(dto.assigneeId())));
 
             task.setAssignee(user);
         }
 
-        var labelIds = dto.getLabelIds();
+        var labelIds = dto.labelIds();
 
         if (labelIds != null && !labelIds.isEmpty()) {
             Set<Label> labels = resolveLabels(labelIds);

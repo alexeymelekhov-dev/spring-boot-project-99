@@ -31,7 +31,7 @@ public class UserController {
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserCreateDTO dto) {
         var createdUser = userService.createUser(dto);
         return ResponseEntity
-                .created(URI.create("/api/users/" + createdUser.getId()))
+                .created(URI.create("/api/users/" + createdUser.id()))
                 .body(createdUser);
     }
 

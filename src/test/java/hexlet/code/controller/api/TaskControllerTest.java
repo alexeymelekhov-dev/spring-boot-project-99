@@ -176,12 +176,14 @@ public class TaskControllerTest {
         var labels = Set.of(firstLabel, secondLabel);
         Set<Long> labelIds = labels.stream().map(Label::getId).collect(Collectors.toSet());
 
-        var taskCreateDTO = new TaskCreateDTO();
-        taskCreateDTO.setAssigneeId(user.getId());
-        taskCreateDTO.setStatus(status.getSlug());
-        taskCreateDTO.setTitle("Test title");
-        taskCreateDTO.setContent("Test content");
-        taskCreateDTO.setLabelIds(labelIds);
+        var taskCreateDTO = new TaskCreateDTO(
+                null,
+                user.getId(),
+                labelIds,
+                "Test title",
+                "Test content",
+                status.getSlug()
+        );
 
         var taskRequestBody = objectMapper.writeValueAsString(taskCreateDTO);
 
@@ -191,9 +193,9 @@ public class TaskControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").isNotEmpty())
-                .andExpect(jsonPath("$.title").value(taskCreateDTO.getTitle()))
-                .andExpect(jsonPath("$.content").value(taskCreateDTO.getContent()))
-                .andExpect(jsonPath("$.index").value(taskCreateDTO.getIndex()))
+                .andExpect(jsonPath("$.title").value(taskCreateDTO.title()))
+                .andExpect(jsonPath("$.content").value(taskCreateDTO.content()))
+                .andExpect(jsonPath("$.index").value(taskCreateDTO.index()))
                 .andExpect(jsonPath("$.status").value(status.getSlug()))
                 .andExpect(jsonPath("$.assignee_id").value(user.getId()))
                 .andExpect(jsonPath("$.taskLabelIds", containsInAnyOrder(
@@ -209,12 +211,14 @@ public class TaskControllerTest {
         var user = createAndSaveUser("email@example.com");
         var status = createAndSaveTaskStatus("New", "new");
 
-        var taskCreateDTO = new TaskCreateDTO();
-        taskCreateDTO.setAssigneeId(user.getId());
-        taskCreateDTO.setStatus(status.getSlug());
-        taskCreateDTO.setTitle("Test title");
-        taskCreateDTO.setContent("Test content");
-        taskCreateDTO.setLabelIds(null);
+        var taskCreateDTO = new TaskCreateDTO(
+                null,
+                user.getId(),
+                null,
+                "Test title",
+                "Test content",
+                status.getSlug()
+        );
 
         var body = objectMapper.writeValueAsString(taskCreateDTO);
 
@@ -272,9 +276,14 @@ public class TaskControllerTest {
     void shouldUpdateTaskPartially_whenOnlyTitleAndContentProvided() throws Exception {
         var task = createAndSaveTask(null, null, null, null);
 
-        var taskUpdateDTO = new TaskUpdateDTO();
-        taskUpdateDTO.setTitle("New title");
-        taskUpdateDTO.setContent("New content");
+        var taskUpdateDTO = new TaskUpdateDTO(
+                null,
+                null,
+                null,
+                "New title",
+                "New content",
+                null
+        );
 
         var taskRequestBody = objectMapper.writeValueAsString(taskUpdateDTO);
 
@@ -285,8 +294,8 @@ public class TaskControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(task.getId()))
-                .andExpect(jsonPath("$.title").value(taskUpdateDTO.getTitle()))
-                .andExpect(jsonPath("$.content").value(taskUpdateDTO.getContent()))
+                .andExpect(jsonPath("$.title").value(taskUpdateDTO.title()))
+                .andExpect(jsonPath("$.content").value(taskUpdateDTO.content()))
                 .andExpect(jsonPath("$.index").value(task.getIndex()))
                 .andExpect(jsonPath("$.status").value(task.getStatus().getSlug()))
                 .andExpect(jsonPath("$.assignee_id").value(task.getAssignee().getId()))
@@ -312,13 +321,14 @@ public class TaskControllerTest {
         var labels = Set.of(firstLabel, secondLabel);
         Set<Long> labelIds = labels.stream().map(Label::getId).collect(Collectors.toSet());
 
-        var taskUpdateDTO = new TaskUpdateDTO();
-        taskUpdateDTO.setTitle("New title");
-        taskUpdateDTO.setContent("New content");
-        taskUpdateDTO.setIndex(1L);
-        taskUpdateDTO.setStatus(newStatus.getSlug());
-        taskUpdateDTO.setAssigneeId(newAssignee.getId());
-        taskUpdateDTO.setLabelIds(labelIds);
+        var taskUpdateDTO = new TaskUpdateDTO(
+                1L,
+                newAssignee.getId(),
+                labelIds,
+                "New title",
+                "New content",
+                newStatus.getSlug()
+        );
 
         var taskRequestBody = objectMapper.writeValueAsString(taskUpdateDTO);
 
@@ -328,11 +338,11 @@ public class TaskControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(task.getId()))
-                .andExpect(jsonPath("$.title").value(taskUpdateDTO.getTitle()))
-                .andExpect(jsonPath("$.content").value(taskUpdateDTO.getContent()))
-                .andExpect(jsonPath("$.index").value(taskUpdateDTO.getIndex()))
-                .andExpect(jsonPath("$.status").value(taskUpdateDTO.getStatus()))
-                .andExpect(jsonPath("$.assignee_id").value(taskUpdateDTO.getAssigneeId()))
+                .andExpect(jsonPath("$.title").value(taskUpdateDTO.title()))
+                .andExpect(jsonPath("$.content").value(taskUpdateDTO.content()))
+                .andExpect(jsonPath("$.index").value(taskUpdateDTO.index()))
+                .andExpect(jsonPath("$.status").value(taskUpdateDTO.status()))
+                .andExpect(jsonPath("$.assignee_id").value(taskUpdateDTO.assigneeId()))
                 .andExpect(jsonPath("$.taskLabelIds", containsInAnyOrder(
                         firstLabel.getId().intValue(),
                         secondLabel.getId().intValue()

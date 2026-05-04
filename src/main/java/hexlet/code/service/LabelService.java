@@ -28,7 +28,7 @@ public class LabelService {
     }
 
     public LabelDTO createLabel(LabelCreateDTO dto) {
-        validateUniqueName(dto.getName());
+        validateUniqueName(dto.name());
 
         var label = labelMapper.toEntity(dto);
         var savedLabel = labelRepository.save(label);
@@ -46,7 +46,7 @@ public class LabelService {
         var label =  labelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.LABEL_NOT_FOUND.format(id)));
 
-        validateUniqueName(dto.getName());
+        validateUniqueName(dto.name());
 
         labelMapper.updateLabelFromDTO(dto, label);
 

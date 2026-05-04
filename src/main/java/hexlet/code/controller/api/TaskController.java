@@ -32,7 +32,7 @@ public class TaskController {
     private ResponseEntity<TaskDTO> createTask(@Valid @RequestBody TaskCreateDTO dto) {
         var createdTask = taskService.createTask(dto);
         return ResponseEntity
-                .created(URI.create("/api/tasks/" + createdTask.getId()))
+                .created(URI.create("/api/tasks/" + createdTask.id()))
                 .body(createdTask);
     }
 

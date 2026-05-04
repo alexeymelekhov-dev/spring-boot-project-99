@@ -1,18 +1,12 @@
 package hexlet.code.dto.task_status;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-public class TaskStatusCreateDTO {
+public record TaskStatusCreateDTO(
+        @NotBlank
+        String name,
 
-    @NotBlank
-    private String name;
-
-    @NotBlank
-    private String slug;
-
+        @NotBlank
+        String slug
+) {
 }

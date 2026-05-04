@@ -32,7 +32,7 @@ public class TaskStatusController {
     public ResponseEntity<TaskStatusDTO> createTaskStatus(@Valid @RequestBody TaskStatusCreateDTO dto) {
         var createdTaskStatus = taskStatusService.createTaskStatus(dto);
         return ResponseEntity
-                .created(URI.create("/api/task_statuses/" + createdTaskStatus.getId()))
+                .created(URI.create("/api/task_statuses/" + createdTaskStatus.id()))
                 .body(createdTaskStatus);
     }
 

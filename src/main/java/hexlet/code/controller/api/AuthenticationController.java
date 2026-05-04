@@ -21,11 +21,11 @@ public class AuthenticationController {
     @PostMapping("/login")
     public String create(@RequestBody AuthRequest authRequest) {
         var authentication = new UsernamePasswordAuthenticationToken(
-                authRequest.getUsername(), authRequest.getPassword());
+                authRequest.username(), authRequest.password());
 
         authenticationManager.authenticate(authentication);
 
-        return jwtUtils.generateToken(authRequest.getUsername());
+        return jwtUtils.generateToken(authRequest.username());
     }
 
 }

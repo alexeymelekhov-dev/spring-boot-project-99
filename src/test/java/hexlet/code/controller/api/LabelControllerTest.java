@@ -81,8 +81,7 @@ public class LabelControllerTest {
     @Test
     @WithMockUser(username = USER_EMAIL)
     void shouldCreateLabelWithValidParams() throws Exception {
-        var labelCreateDTO = new LabelCreateDTO();
-        labelCreateDTO.setName("question");
+        var labelCreateDTO = new LabelCreateDTO("question");
 
         var labelCreateRequestBody = objectMapper.writeValueAsString(labelCreateDTO);
 
@@ -92,7 +91,7 @@ public class LabelControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").isNotEmpty())
-                .andExpect(jsonPath("$.name").value(labelCreateDTO.getName()))
+                .andExpect(jsonPath("$.name").value(labelCreateDTO.name()))
                 .andExpect(jsonPath("$.createdAt").isNotEmpty());
     }
 
@@ -134,8 +133,7 @@ public class LabelControllerTest {
     void shouldUpdateSuccessfulLabelWithValidJson() throws Exception {
         var label = createAndSaveLabel("question");
 
-        var labelUpdateDTO = new LabelUpdateDTO();
-        labelUpdateDTO.setName("new-label-name");
+        var labelUpdateDTO = new LabelUpdateDTO("new-label-name");
 
         var labelRequestBody = objectMapper.writeValueAsString(labelUpdateDTO);
 
@@ -145,7 +143,7 @@ public class LabelControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(label.getId()))
-                .andExpect(jsonPath("$.name").value(labelUpdateDTO.getName()))
+                .andExpect(jsonPath("$.name").value(labelUpdateDTO.name()))
                 .andExpect(jsonPath("$.createdAt").value(label.getUpdatedAt().toString()));
     }
 
